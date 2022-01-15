@@ -1,0 +1,199 @@
+FlowEdge e1(12, 23, 4.46);
+    FlowEdge e2(2, 13, 7.46);
+    FlowEdge e3(23, 34, 3.46);
+
+    cout << e1 << endl;
+    cout << e2 << endl;
+    cout << e3 << endl;
+
+    e1.addResidualFlowTo(23, e2.from());
+    e2.addResidualFlowTo(2, e3.from());
+    e3.addResidualFlowTo(34, e1.from());
+    cout << e1 << endl;
+    cout << e2 << endl;
+    cout << e3 << endl;
+    cout << e1.residualCapacityTo(23) << endl;
+    cout << e2.residualCapacityTo(2) << endl;
+    cout << e3.residualCapacityTo(34) << endl;
+
+
+    // test the Bag class
+    Bag<int> b;
+    b.add(1);
+    b.add(2);
+    b.add(3);
+    b.add(4);
+    b.add(5);
+    b.add(6);
+    b.add(7);
+    b.add(8);
+    b.add(9);
+
+    Bag <int> b2;
+    b2.add(11);
+    b2.add(2);
+    b2.add(3);
+    b2.add(4);
+    b2.add(51);
+    b2.add(16);
+    b2.add(71);
+    b2.add(81);
+
+    cout << "b2 " << b2 << endl;
+
+    Bag <int> b3 = b / b2;
+    cout << "b3 " << b3 << endl;
+    b3.shuffle();
+    cout << "b3 after shuffle " << b3 << endl;
+    b3.sort();
+    cout << "b3 after sort " << b3 << endl;
+
+    cout << "Bag contains: " << endl;
+    for (int i = 0; i < b.size(); i++) {
+        cout << b.get(i) << endl;
+    }
+    cout << endl;
+    // remove the first element
+    b.remove(1);
+    cout << "Bag contains: " << endl;
+    for (int i = 0; i < b.size(); i++) {
+        cout << b.get(i) << endl;
+    }
+    // pick 5 random elements from the bag
+    cout << "Bag contains 5 random values: " << endl;
+    for (int i = 0; i < 5; i++) {
+        cout << b.pickRandom() << endl;
+    }
+    // test the iterator
+    cout << "Bag contains: " << endl;
+    for (Bag<int>::Iterator it = b.begin(); it != b.end(); it++) {
+        cout << *it << endl;
+    }
+    // iterate through the bag in reverse
+    cout << "Bag contains: " << endl;
+    for (Bag<int>::ReverseIterator it = b.rbegin(); it != b.rend(); it++) {
+        cout << *it << endl;
+    }
+    // test the [] and () operators
+    cout << "Bag contains []: " << endl;
+    for (int i = 0; i < b.size(); i++) {
+        cout << b[i] << endl;
+    }
+    // use the [] to set the value of the elemts all to *2
+    for (int i = 0; i < b.size(); i++) {
+        b[i] *= b[i] * 2;
+    }
+    cout << "Bag contains (): " << endl;
+    for (int i = 0; i < b.size(); i++) {
+        cout << b(i) << endl;
+    }
+
+    // empty the bag
+    b.clear();
+    cout << "Bag contains afte empty: " << endl;
+    for (int i = 0; i < b.size(); i++) {
+        cout << b.get(i) << endl;
+    }
+
+
+        // inner Ford Fulkerson class
+        class FordFulkerson {
+            FlowNetwork *_G;
+            int _s;
+            int _t;
+            int _f;
+            bool *_marked;
+            int *_edgeTo;
+            int *_distTo;
+            int *_residualCapacity;
+            bool _hasAugmentingPath;
+            void bfs(int s);
+            bool hasAugmentingPath() const;
+            int maxFlow();
+        public:
+            FordFulkerson(FlowNetwork *G, int s, int t);
+            int value() const;
+            FlowNetwork::FlowNetworkIterator augmentingPath();
+            ~FordFulkerson();
+        };
+
+void FlowNetwork::FordFulkerson::bfs(int s) {
+    _distTo[s] = 0;
+    _marked[s] = true;
+    Bag<FlowEdge*>::Iterator it = _G->adj(s);
+    while (it.hasNext()) {
+        FlowEdge *e = it.next();
+        if (_distTo[e->to()] < 0 && e->residualCapacityTo(s) > 0) {
+            _edgeTo[e->to()] = e->from();
+            _distTo[e->to()] = _distTo[s] + 1;
+            _marked[e->to()] = true;
+        }
+    }
+}
+bool FlowNetwork::FordFulkerson::hasAugmentingPath() const {
+    return _hasAugmentingPath;
+}
+
+int FlowNetwork::FordFulkerson::maxFlow() {
+    _f = 0;
+    while (hasAugmentingPath()) {
+        int bottle = INT_MAX;
+        int v = _t;
+        while (v != _s) {
+            int w = _edgeTo[v];
+            bottle = min(bottle, _residualCapacity[w]);
+            v = w;
+        }
+        v = _t;
+        while (v != _s) {
+            int w = _edgeTo[v];
+            _residualCapacity[w] -= bottle;
+            _residualCapacity[w ^ 1] += bottle;
+            v = w;
+        }
+        _f += bottle;
+        bfs(_s);
+    }
+    return _f;
+}
+
+FlowNetwork::FordFulkerson::FordFulkerson(FlowNetwork *G, int s, int t) {
+    _G = G;
+    _s = s;
+    _t = t;
+    _f = 0;
+    _marked = new bool[G->V()];
+    _edgeTo = new int[G->V()];
+    _distTo = new int[G->V()];
+    _residualCapacity = new int[G->E()];
+    for (int i = 0; i < G->V(); i++) {
+        _marked[i] = false;
+        _edgeTo[i] = -1;
+        _distTo[i] = -1;
+    }
+    for (int i = 0; i < G->E(); i++) {
+        for (int j = 0; j < G->E(); j++) {
+            _residualCapacity[i] = G->_adj[i].get(j)->residualCapacityTo(i);
+        }
+
+    }
+    bfs(_s);
+    _hasAugmentingPath = hasAugmentingPath();
+    // G->_adj[i].get(i)->residualCapacityTo(i);
+}
+
+int FlowNetwork::FordFulkerson::value() const {
+    return _f;
+}
+
+FlowNetwork::FlowNetworkIterator FlowNetwork::FordFulkerson::augmentingPath() {
+    // augmenting path
+    return FlowNetwork::FlowNetworkIterator(nullptr);
+}
+
+FlowNetwork::FordFulkerson::~FordFulkerson() {
+    delete[] _marked;
+    delete[] _edgeTo;
+    delete[] _distTo;
+    delete[] _residualCapacity;
+}

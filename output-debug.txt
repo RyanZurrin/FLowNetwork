@@ -1,0 +1,107 @@
+The flow network is:
+10 20
+  0: 0->0 0/94, 0->0 0/94, 0->4 0/70, 3->0 0/88,
+  1: 9->1 0/44, 2->1 0/20, 1->4 0/6, 2->1 0/61, 1->4 0/66, 3->1 0/65,
+  2: 7->2 0/47, 2->6 0/89, 2->1 0/20, 2->1 0/61, 2->8 0/0,
+  3: 3->8 0/45, 3->7 0/66, 7->3 0/79, 3->5 0/30, 7->3 0/62, 3->0 0/88, 3->1 0/65,
+  4: 0->4 0/70, 1->4 0/6, 1->4 0/66,
+  5: 3->5 0/30, 7->5 0/49, 5->7 0/97,
+  6: 2->6 0/89,
+  7: 3->7 0/66, 7->2 0/47, 7->3 0/79, 7->3 0/62, 7->5 0/49, 5->7 0/97,
+  8: 3->8 0/45, 8->9 0/75, 2->8 0/0,
+  9: 9->1 0/44, 8->9 0/75,
+
+v:0 i:0, deleting 0x4da8e70
+v:0 i:1, deleting 0x4da8e70
+v:0 i:2, deleting 0x4da8c70
+v:0 i:3, deleting 0x4da8170
+v:1 i:0, deleting 0x4da8870
+v:1 i:1, deleting 0x4da8770
+v:1 i:2, deleting 0x4da8570
+v:1 i:3, deleting 0x4da8470
+v:1 i:4, deleting 0x4da8070
+v:1 i:5, deleting 0x4da7e70
+v:2 i:0, deleting 0x4da8d70
+v:2 i:1, deleting 0x4da8970
+v:2 i:2, deleting 0x4da8770
+v:2 i:3, deleting 0x4da8470
+v:2 i:4, deleting 0x4da8270
+v:3 i:0, deleting 0x4da9070
+v:3 i:1, deleting 0x4da8f70
+v:3 i:2, deleting 0x4da8b70
+v:3 i:3, deleting 0x4da8a70
+v:3 i:4, deleting 0x4da8670
+v:3 i:5, deleting 0x4da8170
+v:3 i:6, deleting 0x4da7e70
+v:4 i:0, deleting 0x4da8c70
+v:4 i:1, deleting 0x4da8570
+v:4 i:2, deleting 0x4da8070
+v:5 i:0, deleting 0x4da8a70
+v:5 i:1, deleting 0x4da7f70
+v:5 i:2, deleting 0x4da7d70
+v:6 i:0, deleting 0x4da8970
+v:7 i:0, deleting 0x4da8f70
+v:7 i:1, deleting 0x4da8d70
+v:7 i:2, deleting 0x4da8b70
+v:7 i:3, deleting 0x4da8670
+v:7 i:4, deleting 0x4da7f70
+v:7 i:5, deleting 0x4da7d70
+v:8 i:0, deleting 0x4da9070
+v:8 i:1, deleting 0x4da8370
+v:8 i:2, deleting 0x4da8270
+v:9 i:0, deleting 0x4da8870
+v:9 i:1, deleting 0x4da8370
+
+The flow network is:
+10 20
+  0: 0->6 0/9, 0->7 0/1, 0->3 0/0, 0->0 0/14, 0->0 0/14,
+  1: 6->1 0/46, 1->6 0/45, 7->1 0/61, 1->6 0/47,
+  2: 2->9 0/36, 2->6 0/76,
+  3: 0->3 0/0,
+  4: 4->5 0/67, 8->4 0/21, 4->8 0/31, 7->4 0/2,
+  5: 5->8 0/11, 4->5 0/67,
+  6: 0->6 0/9, 8->6 0/63, 6->1 0/46, 6->9 0/44, 2->6 0/76, 1->6 0/45, 6->9 0/40, 1->6 0/47,
+  7: 0->7 0/1, 7->1 0/61, 7->4 0/2, 7->9 0/90,
+  8: 8->6 0/63, 5->8 0/11, 8->4 0/21, 4->8 0/31,
+  9: 2->9 0/36, 6->9 0/44, 9->9 0/32, 9->9 0/32, 6->9 0/40, 7->9 0/90,
+
+v:0 i:0, deleting 0x4da9070
+v:0 i:1, deleting 0x4da8f70
+v:0 i:2, deleting 0x4da8370
+v:0 i:3, deleting 0x4da8270
+v:0 i:4, deleting 0x4da8270
+v:1 i:0, deleting 0x4da8c70
+v:1 i:1, deleting 0x4da8770
+v:1 i:2, deleting 0x4da8070
+v:1 i:3, deleting 0x4da7d70
+v:2 i:0, deleting 0x4da8e70
+v:2 i:1, deleting 0x4da8a70
+v:3 i:0, deleting 0x4da8370
+v:4 i:0, deleting 0x4da8870
+v:4 i:1, deleting 0x4da8670
+v:4 i:2, deleting 0x4da8470
+v:4 i:3, deleting 0x4da7f70
+v:5 i:0, deleting 0x4da8970
+v:5 i:1, deleting 0x4da8870
+v:6 i:0, deleting 0x4da9070
+v:6 i:1, deleting 0x4da8d70
+v:6 i:2, deleting 0x4da8c70
+v:6 i:3, deleting 0x4da8b70
+v:6 i:4, deleting 0x4da8a70
+v:6 i:5, deleting 0x4da8770
+v:6 i:6, deleting 0x4da8170
+v:6 i:7, deleting 0x4da7d70
+v:7 i:0, deleting 0x4da8f70
+v:7 i:1, deleting 0x4da8070
+v:7 i:2, deleting 0x4da7f70
+v:7 i:3, deleting 0x4da7e70
+v:8 i:0, deleting 0x4da8d70
+v:8 i:1, deleting 0x4da8970
+v:8 i:2, deleting 0x4da8670
+v:8 i:3, deleting 0x4da8470
+v:9 i:0, deleting 0x4da8e70
+v:9 i:1, deleting 0x4da8b70
+v:9 i:2, deleting 0x4da8570
+v:9 i:3, deleting 0x4da8570
+v:9 i:4, deleting 0x4da8170
+v:9 i:5, deleting 0x4da7e70
