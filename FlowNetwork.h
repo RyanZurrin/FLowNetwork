@@ -12,23 +12,30 @@
 class FlowNetwork {
     int _V;
     int _E;
-    Bag<FlowEdge*> *_adj;
+    int _source;
+    int _sink;
 public:
+    Bag<FlowEdge*> *_adj;
     FlowNetwork(int V);
-    FlowNetwork(int V, int E);
+    FlowNetwork(int V, int E, int source, int sink,
+                bool selfLoops = false, bool parallelEdges = false );
     FlowNetwork(istream &in);
     ~FlowNetwork();
     void validateVertex(int v) const;
     void addEdge(FlowEdge* e);
+    void addEdge(int v, int w, double capacity);
     void removeEdge(FlowEdge *pEdge);
+    bool containsEdge(FlowEdge *pEdge);
     int V() const;
     int E() const;
-    // returns the edges incident to v, including both edges pointing to and from v
+    int source() const { return _source; }
+    int sink() const { return _sink; }
+    void setSource(int source) { _source = source; }
+    void setSink(int sink) { _sink = sink; }
     Bag<FlowEdge*>::Iterator adj(int v);
-    // a method that returns an iterator of the edges not including self loops
     Bag<FlowEdge*>::Iterator edges();
+
     string toString() const;
-    // overloads the << operator
     friend ostream &operator<<(ostream &os, const FlowNetwork &G);
 
     // inner class for iterating over the edges
@@ -52,6 +59,8 @@ public:
         }
     };
 
+
+
 };
 
 
@@ -59,17 +68,24 @@ FlowNetwork::FlowNetwork(int V) {
     if (V < 0) throw "Number of vertices must be nonnegative";
     _V = V;
     _E = 0;
+    _source = 0;
+    _sink = V - 1;
     _adj = new Bag<FlowEdge*>[V];
     for (int v = 0; v < V; v++) {
         _adj[v] = Bag<FlowEdge*>();
     }
 }
 
-FlowNetwork::FlowNetwork(int V, int E) {
+FlowNetwork::FlowNetwork(int V, int E, int source, int sink,
+                         bool selfLoops, bool parallelEdges) {
     if (V < 0) throw "Number of vertices must be nonnegative";
     if (E < 0) throw "Number of edges must be nonnegative";
+    if (source < 0 || source >= V) throw "Invalid source";
+    if (sink < 0 || sink >= V) throw "Invalid sink";
     _V = V;
     _E = 0;
+    _source = source;
+    _sink = sink;
     _adj = new Bag<FlowEdge*>[V];
     for (int v = 0; v < V; v++) {
         _adj[v] = Bag<FlowEdge*>();
@@ -85,7 +101,18 @@ FlowNetwork::FlowNetwork(int V, int E) {
         int v = vert(gen);
         int w = vert(gen);
         int c = dis(gen);
-        addEdge(new FlowEdge(v, w, c));
+        while (v == _sink) v = vert(gen); // no output edges from the sink
+        while (w == _source) w = vert(gen); // no input edges to the source
+        if (!selfLoops && v == w) { // no self loops
+            i--; continue;
+        }
+        FlowEdge *e = new FlowEdge(v, w, c);
+        if (!parallelEdges && containsEdge(e)) { // no parallel edges
+            delete e;
+            i--; continue;
+        } else {
+            addEdge(e);
+        }
     }
 }
 
@@ -117,7 +144,7 @@ FlowNetwork::~FlowNetwork() {
         }
     }
     for (auto e : edges) {
-        delete e;
+        if (e != nullptr) delete e;
     }
     delete[] _adj;
 }
@@ -165,7 +192,7 @@ string FlowNetwork::toString() const {
     for (int v = 0; v < V(); v++) {
         ss << "  " << v << ": ";
         for (Bag<FlowEdge*>::Iterator it = _adj[v].begin(); it != _adj[v].end(); ++it) {
-            ss << *(*it) << ", ";
+            if ((*it)->to() != v) ss << *(*it) << ", ";
         }
         ss << endl;
     }
@@ -185,6 +212,31 @@ void FlowNetwork::removeEdge(FlowEdge *pEdge) {
     _adj[w].remove(pEdge);
     delete pEdge;
     _E--;
+}
+
+bool FlowNetwork::containsEdge(FlowEdge *pEdge) {
+    // remove all occurrences of pEdge from _adj
+    int v = pEdge->from();
+    int w = pEdge->to();
+    for (Bag<FlowEdge*>::Iterator it = _adj[v].begin(); it != _adj[v].end(); it++) {
+        // check that the to and from vertices are the same
+        if ((*it)->to() == w && (*it)->from() == v) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void FlowNetwork::addEdge(int v, int w, double capacity) {
+    if (v < 0 || v >= V()) throw "vertex " + to_string(v) + " is not between 0 and " + to_string(V() - 1);
+    if (w < 0 || w >= V()) throw "vertex " + to_string(w) + " is not between 0 and " + to_string(V() - 1);
+    FlowEdge *e = new FlowEdge(v, w, capacity);
+    if (containsEdge(e)) {
+        delete e;
+        return;
+    } else {
+        addEdge(e);
+    }
 }
 
 #endif //FLOWNETWORK_FLOWNETWORK_H

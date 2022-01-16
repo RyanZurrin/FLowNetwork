@@ -46,10 +46,9 @@ public:
         return n;
     }
     void add(ITEM &item) {
-        Node<ITEM> *oldfirst_ = first_;
-        first_ = new Node<ITEM>(item);
-        first_->item = item;
-        first_->next = oldfirst_;
+        Node<ITEM> *tmp = new Node<ITEM>(item);
+        tmp->next = first_;
+        first_ = tmp;
         n++;
     }
     bool contains(const ITEM &item) const {
@@ -139,13 +138,21 @@ public:
         }
 
         bool hasNext() {
-            return this->current->next != nullptr;
+            return this->current != nullptr;
         }
 
         FlowEdge *next() {
             FlowEdge *edge = this->current->item;
             this->current = this->current->next;
             return edge;
+        }
+
+        FlowEdge *begin() {
+            return this->current->item;
+        }
+
+        bool end() {
+            return this->current == nullptr;
         }
 
     private:

@@ -197,3 +197,23 @@ FlowNetwork::FordFulkerson::~FordFulkerson() {
     delete[] _distTo;
     delete[] _residualCapacity;
 }
+
+
+
+int V = 5;
+    int E = 7;
+    int s = 0;
+    int t = V - 1;
+    FlowNetwork flowNetwork(V);
+
+    flowNetwork.addEdge(s, 1, 2);
+    flowNetwork.addEdge(s, 2, 6);
+    flowNetwork.addEdge(s, 3, 5);
+    flowNetwork.addEdge(1, 4, 5);
+    flowNetwork.addEdge(2, 1, 2);
+    flowNetwork.addEdge(2, 4, 3);
+    flowNetwork.addEdge(3, 4, 6);
+    cout << flowNetwork << endl;
+
+    FordFulkerson fordFulkerson(flowNetwork);
+    cout << fordFulkerson << endl;

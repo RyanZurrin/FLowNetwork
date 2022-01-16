@@ -133,6 +133,12 @@ void FlowEdge::addResidualFlowTo(int v, double delta) {
     else throw invalid_argument("invalid vertex");
     if (abs(_flow) <= FLOATING_POINT_EPSILON) _flow = 0.0;
     if (abs(_flow - _capacity) <= FLOATING_POINT_EPSILON) _flow = _capacity;
+    if (_flow < 0.0) {
+        throw invalid_argument("flow is negative");
+    }
+    if (_flow > _capacity) {
+        throw invalid_argument("flow exceeds capacity");
+    }
 }
 
 string FlowEdge::toString() const {
