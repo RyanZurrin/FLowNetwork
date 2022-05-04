@@ -1,7 +1,7 @@
 # FLowNetwork
 
 to use clone the repo and then build your graph in a text file in the following format: 
-> num_vertices num_edges
+> num_vertices num_edges<br/>
 > from -> to N where N is the capacity of the edge
 ```
 8 15
