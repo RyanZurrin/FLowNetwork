@@ -19,7 +19,7 @@ public:
     FlowNetwork(int V);
     FlowNetwork(int V, int E, int source, int sink,
                 bool selfLoops = false, bool parallelEdges = false );
-    FlowNetwork(istream &in);
+    FlowNetwork(istream &in, int source, int sink, bool selfLoops = false, bool parallelEdges = false);
     ~FlowNetwork();
     void validateVertex(int v) const;
     void addEdge(FlowEdge* e);
@@ -116,16 +116,20 @@ FlowNetwork::FlowNetwork(int V, int E, int source, int sink,
     }
 }
 
-FlowNetwork::FlowNetwork(istream &in) {
+FlowNetwork::FlowNetwork(istream &in, int source, int sink, bool selfLoops, bool parallelEdges) {
+    this->setSink(sink);
+    this->setSource(source);
+    int edges = 0;
+    this->_E = 0;
     in >> _V;
     if (_V < 0) throw "Number of vertices must be nonnegative";
-    in >> _E;
+    in >> edges;
     if (_E < 0) throw "Number of edges must be nonnegative";
     _adj = new Bag<FlowEdge*>[V()];
     for (int v = 0; v < V(); v++) {
         _adj[v] = Bag<FlowEdge*>();
     }
-    for (int i = 0; i < E(); i++) {
+    for (int i = 0; i < edges; i++) {
         int v, w;
         double c;
         in >> v >> w >> c;
